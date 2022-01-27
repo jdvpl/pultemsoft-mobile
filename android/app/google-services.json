@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "935924857959",
+    "project_id": "pultemsoft",
+    "storage_bucket": "pultemsoft.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:935924857959:android:c0ec2be915d62dcef628c2",
+        "android_client_info": {
+          "package_name": "com.jdvpl.pultemsoft"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "935924857959-kv4n1gckqrmru1382bjishrosfjqlrpp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jdvpl.pultemsoft",
+            "certificate_hash": "07b878520e0c971c712ac7f4a630835b84cd2313"
+          }
+        },
+        {
+          "client_id": "935924857959-1f4sq694v2gfkd9i8inhkp81dmt3npoq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXlRb07kRJhg4n6aGf3BpjmOSjp4PLan8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "935924857959-1f4sq694v2gfkd9i8inhkp81dmt3npoq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

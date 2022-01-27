@@ -206,7 +206,7 @@ class MapController {
         // aca es donde busca los conductores a la distancia que le indiquemos
         _position.latitude,
         _position.longitude,
-        15);
+        1000);
     stream.listen((List<DocumentSnapshot> documentList) {
       for (MarkerId m in markers.keys) {
         bool remove = true;
@@ -226,7 +226,7 @@ class MapController {
         GeoPoint point = d.data()['position']['geopoint'];
         String id = d.id;
         String name = d.data()['name'];
-        double rating = d.data()['rating'];
+        double documento = d.data()['document'];
 
         if (!idsDriver.contains(id)) {
           idsDriver.add(id);
@@ -234,7 +234,7 @@ class MapController {
         print("conductores lista $idsDriver");
 
         addMarker(d.id, point.latitude, point.longitude, name,
-            rating.toStringAsFixed(2), markerDriver);
+            documento.toString(), markerDriver);
       }
 
       refresh();

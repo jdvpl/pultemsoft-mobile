@@ -9,20 +9,6 @@ class GeofireProvider {
     _ref = FirebaseFirestore.instance.collection('users');
     _geo = Geoflutterfire();
   }
-  // creando el metodo para almacenar en la base de datos
-
-  Future<void> create(String id, double lat, double lng, String typeUser) {
-    // esto es lo que se guarda en la base de datos
-    GeoFirePoint myLocation = _geo.point(latitude: lat, longitude: lng);
-    return _ref
-        .doc(id)
-        .set({'status': '${typeUser}_available', 'position': myLocation.data});
-  }
-  // borra la posicion actual del conductor
-
-  Future<void> delete(String id) {
-    return _ref.doc(id).delete();
-  }
 
   // verifica si esta en la base de datos
   Stream<DocumentSnapshot> getLocationByIdStream(String id) {
