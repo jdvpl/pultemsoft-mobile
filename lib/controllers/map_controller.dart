@@ -55,7 +55,6 @@ class MapController {
 
   String ciudad;
   String departmento;
-  String typeUser = "Particulares";
   List<String> idsDriver = new List();
 
 // metodo init
@@ -65,7 +64,7 @@ class MapController {
     // instanciar los providers
     _geofireProvider = new GeofireProvider();
 
-    markerDriver = await createMarkerImageFromAsset("assets/usuario1.png");
+    markerDriver = await createMarkerImageFromAsset("assets/enfermo.png");
 
     checkGPS();
   }
@@ -206,7 +205,8 @@ class MapController {
         // aca es donde busca los conductores a la distancia que le indiquemos
         _position.latitude,
         _position.longitude,
-        1000);
+        10000);
+
     stream.listen((List<DocumentSnapshot> documentList) {
       for (MarkerId m in markers.keys) {
         bool remove = true;
@@ -219,6 +219,7 @@ class MapController {
           markers.remove(m);
           refresh();
         }
+        print("Entro a lista conductores");
       }
 
       // aca acede a la referencia de la base de datos
@@ -226,15 +227,15 @@ class MapController {
         GeoPoint point = d.data()['position']['geopoint'];
         String id = d.id;
         String name = d.data()['name'];
-        double documento = d.data()['document'];
+        String documento = d.data()['document'];
 
         if (!idsDriver.contains(id)) {
           idsDriver.add(id);
         }
         print("conductores lista $idsDriver");
 
-        addMarker(d.id, point.latitude, point.longitude, name,
-            documento.toString(), markerDriver);
+        addMarker(d.id, point.latitude, point.longitude, name, documento,
+            markerDriver);
       }
 
       refresh();

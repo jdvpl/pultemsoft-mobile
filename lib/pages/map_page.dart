@@ -75,8 +75,6 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-
-
   Widget _btnCenterPosition() {
     return GestureDetector(
       onTap: _con.centerPosition,
@@ -117,7 +115,7 @@ class _MapPageState extends State<MapPage> {
 
   // icono
   Widget _iconMyLocation() {
-    return Image.asset("assets/rapidfasmarker.png", width: 55, height: 55);
+    return Image.asset("assets/marker.png", width: 55, height: 55);
   }
 
   // carview
