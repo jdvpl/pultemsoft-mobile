@@ -1,3 +1,4 @@
+import 'package:custom_info_window/custom_info_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -65,10 +66,16 @@ class _MapPageState extends State<MapPage> {
                 ],
               ),
             ),
+            CustomInfoWindow(
+              controller: _con?.customInfoWindowController,
+              height: 150,
+              width: 250,
+              offset: 50,
+            ),
             Align(
               alignment: Alignment.center,
               child: _iconMyLocation(),
-            )
+            ),
           ],
         ),
       ),
@@ -104,8 +111,11 @@ class _MapPageState extends State<MapPage> {
       myLocationEnabled: false,
       myLocationButtonEnabled: false,
       markers: Set<Marker>.of(_con.markers.values),
+      onTap: (position) {
+        _con.customInfoWindowController.hideInfoWindow();
+      },
       onCameraMove: (position) {
-        _con.initialPosition = position;
+        _con.customInfoWindowController.onCameraMove();
       },
       onCameraIdle: () async {
         await _con.setLocationDraggableInfo();

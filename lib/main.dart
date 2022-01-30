@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:internediowidget/pages/info_page.dart';
 import 'package:internediowidget/pages/map_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       initialRoute: "home",
       routes: {
         "home": (context) => MapPage(),
+        "info": (context) => InfoPage(),
       },
     );
   }
