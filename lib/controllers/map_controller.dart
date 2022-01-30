@@ -186,10 +186,14 @@ class MapController {
         draggable: false,
         zIndex: 2,
         flat: true,
+        onTap: () {
+          print("Presionando data con el id ${markerId}");
+        },
         anchor: Offset(0.5, 0.5),
         rotation: _position.heading);
 
     markers[id] = marker;
+    print("marcadores $markers");
   }
 
   // eliminanddo los escuchadores
@@ -213,6 +217,7 @@ class MapController {
         for (DocumentSnapshot d in documentList) {
           if (m.value == d.id) {
             remove = false;
+            print(" ${d.id} data lol");
           }
         }
         if (remove) {
@@ -228,14 +233,20 @@ class MapController {
         String id = d.id;
         String name = d.data()['name'];
         String documento = d.data()['document'];
+        String phone = d.data()['phone'];
+        List sintomas = d?.data()['illnesses'];
+        print("sintomas $sintomas");
 
         if (!idsDriver.contains(id)) {
           idsDriver.add(id);
         }
         print("conductores lista $idsDriver");
+        String body = "$documento $sintomas";
+        String lol = "$name: $phone";
 
-        addMarker(d.id, point.latitude, point.longitude, name, documento,
-            markerDriver);
+        print("presionando la data ${d.id}");
+        addMarker(
+            d.id, point.latitude, point.longitude, lol, body, markerDriver);
       }
 
       refresh();

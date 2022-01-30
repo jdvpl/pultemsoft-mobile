@@ -130,7 +130,7 @@ class _MapPageState extends State<MapPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _infoCardLocation(
-                  "Origen",
+                  "Ubicacion",
                   _con.from ?? "Lugar de Recogida",
                   () async {
                     await _con.showGoogleAutoComplete(true);
