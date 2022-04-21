@@ -1,3 +1,4 @@
+import 'package:custom_info_window/custom_info_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -65,17 +66,21 @@ class _MapPageState extends State<MapPage> {
                 ],
               ),
             ),
+            CustomInfoWindow(
+              controller: _con?.customInfoWindowController,
+              height: 150,
+              width: 250,
+              offset: 50,
+            ),
             Align(
               alignment: Alignment.center,
               child: _iconMyLocation(),
-            )
+            ),
           ],
         ),
       ),
     );
   }
-
-
 
   Widget _btnCenterPosition() {
     return GestureDetector(
@@ -106,8 +111,11 @@ class _MapPageState extends State<MapPage> {
       myLocationEnabled: false,
       myLocationButtonEnabled: false,
       markers: Set<Marker>.of(_con.markers.values),
+      onTap: (position) {
+        _con.customInfoWindowController.hideInfoWindow();
+      },
       onCameraMove: (position) {
-        _con.initialPosition = position;
+        _con.customInfoWindowController.onCameraMove();
       },
       onCameraIdle: () async {
         await _con.setLocationDraggableInfo();
@@ -117,7 +125,7 @@ class _MapPageState extends State<MapPage> {
 
   // icono
   Widget _iconMyLocation() {
-    return Image.asset("assets/rapidfasmarker.png", width: 55, height: 55);
+    return Image.asset("assets/marker.png", width: 55, height: 55);
   }
 
   // carview
@@ -132,7 +140,7 @@ class _MapPageState extends State<MapPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _infoCardLocation(
-                  "Origen",
+                  "Ubicacion",
                   _con.from ?? "Lugar de Recogida",
                   () async {
                     await _con.showGoogleAutoComplete(true);

@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:clippy_flutter/triangle.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:custom_info_window/custom_info_window.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:internediowidget/constants/constants.dart';
 import 'package:internediowidget/environment/environment.dart';
+import 'package:internediowidget/models/user.dart';
 import 'package:internediowidget/providers/geofire_provider.dart';
 import 'package:internediowidget/utils/map_style.dart';
 import 'package:internediowidget/utils/snackbar.dart' as utils;
@@ -21,7 +25,7 @@ class MapController {
   Completer<GoogleMapController> _mapController = Completer();
 
   CameraPosition initialPosition =
-      CameraPosition(target: LatLng(4.60971, -74.08175), zoom: 10.0);
+      CameraPosition(target: LatLng(4.60971, -74.08175), zoom: 15.0);
 
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 
@@ -55,9 +59,9 @@ class MapController {
 
   String ciudad;
   String departmento;
-  String typeUser = "Particulares";
   List<String> idsDriver = new List();
-
+  CustomInfoWindowController customInfoWindowController =
+      CustomInfoWindowController();
 // metodo init
   Future init(BuildContext context, Function refresh) async {
     this.context = context;
@@ -65,7 +69,7 @@ class MapController {
     // instanciar los providers
     _geofireProvider = new GeofireProvider();
 
-    markerDriver = await createMarkerImageFromAsset("assets/usuario1.png");
+    markerDriver = await createMarkerImageFromAsset("assets/enfermo.png");
 
     checkGPS();
   }
@@ -73,6 +77,7 @@ class MapController {
   // coloca los parametros para el mapa
   void onMapCreated(GoogleMapController controller) {
     controller.setMapStyle(jsonEncode(mapsStyle));
+    customInfoWindowController.googleMapController = controller;
     _mapController.complete(controller);
   }
 
@@ -176,14 +181,78 @@ class MapController {
   }
   // metodo para agregar un marcador personalizado
 
-  void addMarker(String markerId, double lat, double lng, String title,
-      String content, BitmapDescriptor iconMarker) {
+  void addMarker(
+      String markerId,
+      double lat,
+      double lng,
+      String name,
+      String documento,
+      BitmapDescriptor iconMarker,
+      String temp,
+      String saturacion,
+      String bpm) {
     MarkerId id = MarkerId(markerId);
+    LatLng latituMark = new LatLng(lat, lng);
     Marker marker = Marker(
         markerId: id,
         icon: iconMarker,
         position: LatLng(lat, lng),
-        infoWindow: InfoWindow(title: title, snippet: content),
+        onTap: () {
+          customInfoWindowController.addInfoWindow(
+            Column(
+              children: [
+                Expanded(
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.account_circle,
+                                color: Colors.black,
+                                size: 30,
+                              ),
+                            ],
+                          ),
+                          Container(child: Text(name ?? "")),
+                          Container(child: Text("documento: $documento" ?? "")),
+                          Container(child: Text("Temperatura: $temp" ?? "")),
+                          Container(
+                              child: Text("Saturacion: $saturacion" ?? "")),
+                          Container(child: Text("BPM: $bpm" ?? "")),
+                          Container(
+                            color: black,
+                            height: 30,
+                            child: FlatButton(
+                                onPressed: () {
+                                  goToInfoPage(markerId);
+                                },
+                                child: Text(
+                                  "Ver info",
+                                  style: TextStyle(color: white),
+                                )),
+                          ),
+                        ],
+                      )),
+                ),
+                Triangle.isosceles(
+                  edge: Edge.BOTTOM,
+                  child: Container(
+                    color: Colors.blue,
+                    width: 20.0,
+                    height: 10.0,
+                  ),
+                ),
+              ],
+            ),
+            latituMark,
+          );
+        },
         draggable: false,
         zIndex: 2,
         flat: true,
@@ -191,6 +260,7 @@ class MapController {
         rotation: _position.heading);
 
     markers[id] = marker;
+    print("marcadores $markers");
   }
 
   // eliminanddo los escuchadores
@@ -206,35 +276,44 @@ class MapController {
         // aca es donde busca los conductores a la distancia que le indiquemos
         _position.latitude,
         _position.longitude,
-        1000);
+        100000);
+
     stream.listen((List<DocumentSnapshot> documentList) {
       for (MarkerId m in markers.keys) {
         bool remove = true;
         for (DocumentSnapshot d in documentList) {
           if (m.value == d.id) {
             remove = false;
+            print(" ${d.id} data lol");
           }
         }
         if (remove) {
           markers.remove(m);
           refresh();
         }
+        print("Entro a lista conductores");
       }
 
       // aca acede a la referencia de la base de datos
       for (DocumentSnapshot d in documentList) {
         GeoPoint point = d.data()['position']['geopoint'];
         String id = d.id;
-        String name = d.data()['name'];
-        double documento = d.data()['document'];
+        String name = d?.data()['name'];
+        String documento = d?.data()['document'];
+        String temp = d?.data()['temp'];
+        String saturacion = d?.data()['SPO2'];
+        String bpm = d?.data()['Hr'];
+        print("data ${d.data()}");
 
         if (!idsDriver.contains(id)) {
           idsDriver.add(id);
         }
+
         print("conductores lista $idsDriver");
 
-        addMarker(d.id, point.latitude, point.longitude, name,
-            documento.toString(), markerDriver);
+        print("presionando la data ${d.id}");
+        addMarker(d.id, point.latitude, point.longitude, name, documento,
+            markerDriver, temp, saturacion, bpm);
       }
 
       refresh();
@@ -313,5 +392,11 @@ class MapController {
         }
       }
     }
+  }
+
+  void goToInfoPage(String id) {
+    Navigator.pushNamed(context, "info", arguments: {
+      "id": id,
+    });
   }
 }

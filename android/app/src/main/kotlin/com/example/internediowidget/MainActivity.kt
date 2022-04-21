@@ -1,4 +1,4 @@
-package com.example.internediowidget
+package com.jdvpl.pultemsoft
 
 import io.flutter.embedding.android.FlutterActivity
 
