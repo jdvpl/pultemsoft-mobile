@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>PultemSoft</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -26,6 +28,18 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+	<string>Acceso a la galeria de fotos</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Acceso a la camara del dispositivo</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Acceso al microfono del dispositivo</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Acepta los permisos de la ubicacion.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Por favor acepta los permisos del GPS.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>La apliccion necesita los permisos para acceder a la ubicacion</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
